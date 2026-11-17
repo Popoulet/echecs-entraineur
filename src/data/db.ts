@@ -2,8 +2,8 @@
 // Ajouter un store : l'ajouter à STORES et incrémenter VERSION.
 
 const DB_NAME = 'echecs';
-const VERSION = 1;
-export const STORES = ['accounts', 'games', 'kv'] as const; // kv = réglages divers
+const VERSION = 2;
+export const STORES = ['accounts', 'games', 'kv', 'srs', 'userLines', 'puzzles'] as const; // kv = réglages, notes
 export type StoreName = (typeof STORES)[number];
 
 let dbPromise: Promise<IDBDatabase> | undefined;

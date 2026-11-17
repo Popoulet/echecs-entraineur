@@ -1,0 +1,353 @@
+{
+ "id": "londres",
+ "name": "Système de Londres",
+ "color": "w",
+ "description": "1.d4 puis Ff4, e3, Cf3, c3, Fd3, Cbd2 : un plan identique contre presque tout. Solide et facile à mémoriser.",
+ "plans": [
+  "Toujours la même structure : d4, Ff4, e3, Cf3, c3, Fd3, Cbd2.",
+  "Le fou f4 sort AVANT e3, sinon il reste enfermé derrière les pions.",
+  "Cavalier en e5 puis attaque sur le roi (Df3-h3, g4).",
+  "Contre ...Db6 qui attaque b2 : Db3 (la dame défend b2).",
+  "Si ...Fd6 propose l'échange : Fg3 ; après ...Fxg3 hxg3, la colonne h s'ouvre pour la tour."
+ ],
+ "lines": [
+  {
+   "id": "contre-e6",
+   "name": "Contre ...d5 et ...e6",
+   "moves": [
+    {
+     "san": "d4",
+     "text": "Le pion prend le centre ; il est protégé par la dame."
+    },
+    {
+     "san": "d5",
+     "text": "Les Noirs bloquent le centre."
+    },
+    {
+     "san": "Bf4",
+     "text": "Coup clé de la Londres : le fou sort AVANT e3.",
+     "arrows": [
+      "f4b8"
+     ]
+    },
+    {
+     "san": "Nf6",
+     "text": "Développement naturel."
+    },
+    {
+     "san": "e3",
+     "text": "Solidifie d4 et libère le fou f1.",
+     "squares": [
+      "d4",
+      "e3"
+     ]
+    },
+    {
+     "san": "e6",
+     "text": "Les Noirs préparent ...Fd6 pour échanger notre bon fou."
+    },
+    {
+     "san": "Nf3",
+     "text": "Développement, contrôle de e5.",
+     "squares": [
+      "e5"
+     ]
+    },
+    {
+     "san": "Bd6",
+     "text": "Le fou propose l'échange.",
+     "arrows": [
+      "d6f4:red"
+     ]
+    },
+    {
+     "san": "Bg3",
+     "text": "On garde le fou : si ...Fxg3 hxg3, la colonne h s'ouvre pour notre tour.",
+     "arrows": [
+      "h1h7:yellow"
+     ]
+    },
+    {
+     "san": "O-O",
+     "text": "Les Noirs roquent."
+    },
+    {
+     "san": "Bd3",
+     "text": "Le fou vise h7, le point faible du roque.",
+     "arrows": [
+      "d3h7:red"
+     ]
+    },
+    {
+     "san": "c5",
+     "text": "Les Noirs attaquent d4."
+    },
+    {
+     "san": "c3",
+     "text": "Pyramide b2-c3-d4-e3 : très solide.",
+     "squares": [
+      "b2",
+      "c3",
+      "d4",
+      "e3"
+     ]
+    },
+    {
+     "san": "Nc6",
+     "text": "Développement, pression sur d4."
+    },
+    {
+     "san": "Nbd2",
+     "text": "Le cavalier soutient e5 et f3 (en c3 il bloquerait le pion c)."
+    },
+    {
+     "san": "b6",
+     "text": "Prépare ...Fb7."
+    },
+    {
+     "san": "Ne5",
+     "text": "Avant-poste en e5 : le cavalier est très fort ici.",
+     "squares": [
+      "e5"
+     ]
+    },
+    {
+     "san": "Bb7",
+     "text": "Développement."
+    },
+    {
+     "san": "Qf3",
+     "text": "La dame rejoint l'attaque sur l'aile roi (Dh3, g4-g5).",
+     "arrows": [
+      "f3h3"
+     ]
+    },
+    {
+     "san": "Be7",
+     "text": "Plan blanc : g4-g5 ou Dh3, attaque sur le roi noir."
+    }
+   ]
+  },
+  {
+   "id": "contre-db6",
+   "name": "Contre ...c5 et ...Db6",
+   "base": "contre-e6",
+   "branchAt": 3,
+   "moves": [
+    {
+     "san": "c5",
+     "text": "Attaque immédiate du centre."
+    },
+    {
+     "san": "e3",
+     "text": "On consolide d4."
+    },
+    {
+     "san": "Nc6",
+     "text": "Pression sur d4."
+    },
+    {
+     "san": "c3",
+     "text": "On protège d4 et on prépare Db3."
+    },
+    {
+     "san": "Qb6",
+     "text": "La dame attaque b2 (le fou f4 ne le défend plus).",
+     "arrows": [
+      "b6b2:red"
+     ]
+    },
+    {
+     "san": "Qb3",
+     "text": "On propose l'échange des dames : b2 est défendu.",
+     "arrows": [
+      "b3b2:blue"
+     ]
+    },
+    {
+     "san": "c4",
+     "text": "Les Noirs chassent la dame."
+    },
+    {
+     "san": "Qc2",
+     "text": "La dame recule et vise h7. (Si 6...Ff5? alors Dxf5 : voir le piège.)"
+    },
+    {
+     "san": "Nf6",
+     "text": "Développement."
+    },
+    {
+     "san": "Nd2",
+     "text": "Le cavalier prépare e4 pour casser le centre noir.",
+     "arrows": [
+      "e3e4:yellow"
+     ]
+    },
+    {
+     "san": "Bg4",
+     "text": "Le fou se développe hors de la chaîne de pions."
+    },
+    {
+     "san": "Ngf3",
+     "text": "Développement."
+    },
+    {
+     "san": "e6",
+     "text": "Les Noirs consolident d5."
+    },
+    {
+     "san": "Nh4",
+     "text": "Le cavalier part chasser le fou g4 (avec h3 et g4).",
+     "arrows": [
+      "h4g6:yellow"
+     ]
+    },
+    {
+     "san": "Be7",
+     "text": "Développement."
+    },
+    {
+     "san": "h3",
+     "text": "On attaque le fou.",
+     "arrows": [
+      "h3g4:red"
+     ]
+    },
+    {
+     "san": "Bh5",
+     "text": "Le fou recule."
+    },
+    {
+     "san": "g4",
+     "text": "On chasse encore le fou…",
+     "arrows": [
+      "g4h5:red"
+     ]
+    },
+    {
+     "san": "Bg6",
+     "text": "…et Cxg6 prendra la paire de fous. Plan : Cxg6, Fg2, roquer, puis e4."
+    }
+   ]
+  },
+  {
+   "id": "contre-g6",
+   "name": "Contre l'Est-indienne (...Cf6, ...g6)",
+   "moves": [
+    {
+     "san": "d4",
+     "text": "Le pion prend le centre."
+    },
+    {
+     "san": "Nf6",
+     "text": "Les Noirs contrôlent e4 sans jouer ...d5."
+    },
+    {
+     "san": "Bf4",
+     "text": "Toujours le fou en premier !"
+    },
+    {
+     "san": "g6",
+     "text": "Fianchetto : le fou ira en g7."
+    },
+    {
+     "san": "e3",
+     "text": "Base solide."
+    },
+    {
+     "san": "Bg7",
+     "text": "Le fou vise la grande diagonale.",
+     "arrows": [
+      "g7b2"
+     ]
+    },
+    {
+     "san": "Nf3",
+     "text": "Développement, contrôle de e5."
+    },
+    {
+     "san": "O-O",
+     "text": "Les Noirs roquent."
+    },
+    {
+     "san": "Be2",
+     "text": "Contre ...e5, le fou est mieux en e2 qu'en d3 (pas de fourchette ...e5-e4)."
+    },
+    {
+     "san": "d6",
+     "text": "Prépare ...e5."
+    },
+    {
+     "san": "h3",
+     "text": "Donne la case h2 au fou f4 s'il est attaqué.",
+     "arrows": [
+      "f4h2"
+     ]
+    },
+    {
+     "san": "Nbd7",
+     "text": "Prépare ...e5."
+    },
+    {
+     "san": "O-O",
+     "text": "Roque."
+    },
+    {
+     "san": "c5",
+     "text": "Les Noirs attaquent d4."
+    },
+    {
+     "san": "c3",
+     "text": "On tient d4."
+    },
+    {
+     "san": "b6",
+     "text": "Prépare ...Fb7."
+    },
+    {
+     "san": "a4",
+     "text": "Gagne de l'espace et prépare a5 contre b6.",
+     "arrows": [
+      "a4a5"
+     ]
+    },
+    {
+     "san": "Bb7",
+     "text": "Développement."
+    },
+    {
+     "san": "Na3",
+     "text": "Le cavalier ira en c4 ou b5.",
+     "arrows": [
+      "a3c4",
+      "a3b5"
+     ]
+    },
+    {
+     "san": "a6",
+     "text": "Position solide. Plan : Cc4, a5, jeu à l'aile dame."
+    }
+   ]
+  },
+  {
+   "id": "piege-f5",
+   "name": "Piège : le fou f5 non défendu",
+   "trap": true,
+   "base": "contre-db6",
+   "branchAt": 11,
+   "moves": [
+    {
+     "san": "Bf5",
+     "text": "Les Noirs attaquent la dame… mais le fou f5 n'est pas défendu !",
+     "arrows": [
+      "f5c2:red"
+     ]
+    },
+    {
+     "san": "Qxf5",
+     "text": "On prend le fou : une pièce de plus."
+    }
+   ]
+  }
+ ]
+}

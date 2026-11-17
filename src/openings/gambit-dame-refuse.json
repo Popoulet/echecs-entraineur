@@ -1,0 +1,341 @@
+{
+ "id": "gambit-dame-refuse",
+ "name": "Gambit Dame refusé",
+ "color": "b",
+ "description": "1.d4 d5 2.c4 e6 : on refuse le pion offert et on garde un centre très solide. Une défense classique et fiable.",
+ "plans": [
+  "Soutenir d5 avec ...e6 et ...Cf6 : le centre ne cède pas.",
+  "Roquer vite, puis libérer le jeu avec ...c5 ou ...e5.",
+  "Le fou c8 est le problème : le développer en b7 (Tartakower), en e6, ou après ...dxc4.",
+  "Échanger des pièces quand on a moins d'espace.",
+  "Piège de l'éléphant : si Cxd5 malgré la clouure, ...Cxd5 ! gagne une pièce."
+ ],
+ "lines": [
+  {
+   "id": "orthodoxe",
+   "name": "Orthodoxe (système Tartakower)",
+   "moves": [
+    {
+     "san": "d4",
+     "text": "Les Blancs prennent le centre."
+    },
+    {
+     "san": "d5",
+     "text": "On bloque le centre."
+    },
+    {
+     "san": "c4",
+     "text": "Gambit Dame : les Blancs offrent un pion pour détourner d5.",
+     "arrows": [
+      "c4d5:red"
+     ]
+    },
+    {
+     "san": "e6",
+     "text": "Refusé : on soutient d5 avec e6. Très solide.",
+     "arrows": [
+      "e6d5:blue"
+     ]
+    },
+    {
+     "san": "Nc3",
+     "text": "Pression sur d5."
+    },
+    {
+     "san": "Nf6",
+     "text": "Développement, défense de d5."
+    },
+    {
+     "san": "Bg5",
+     "text": "Le fou cloue le cavalier f6 sur la dame.",
+     "arrows": [
+      "g5d8:red"
+     ]
+    },
+    {
+     "san": "Be7",
+     "text": "On décloue le cavalier."
+    },
+    {
+     "san": "e3",
+     "text": "Les Blancs libèrent le fou f1."
+    },
+    {
+     "san": "O-O",
+     "text": "Roque rapide : le roi est en sécurité."
+    },
+    {
+     "san": "Nf3",
+     "text": "Développement."
+    },
+    {
+     "san": "h6",
+     "text": "On demande au fou de se décider."
+    },
+    {
+     "san": "Bh4",
+     "text": "Le fou garde la clouure."
+    },
+    {
+     "san": "b6",
+     "text": "Système Tartakower : le fou c8 ira en b7 ou e6.",
+     "arrows": [
+      "c8b7"
+     ]
+    },
+    {
+     "san": "cxd5",
+     "text": "Les Blancs échangent au centre."
+    },
+    {
+     "san": "Nxd5",
+     "text": "On reprend avec le cavalier pour échanger des pièces."
+    },
+    {
+     "san": "Bxe7",
+     "text": "Échange des fous."
+    },
+    {
+     "san": "Qxe7",
+     "text": "La dame reprend."
+    },
+    {
+     "san": "Nxd5",
+     "text": "Les Blancs échangent les cavaliers."
+    },
+    {
+     "san": "exd5",
+     "text": "Le pion reprend : le fou c8 respire.",
+     "arrows": [
+      "c8e6"
+     ]
+    },
+    {
+     "san": "Rc1",
+     "text": "La tour se place sur la colonne c."
+    },
+    {
+     "san": "Be6",
+     "text": "Le fou défend d5. Plan : ...c5 pour libérer le jeu."
+    }
+   ]
+  },
+  {
+   "id": "echange",
+   "name": "Échange (4.cxd5)",
+   "base": "orthodoxe",
+   "branchAt": 6,
+   "moves": [
+    {
+     "san": "cxd5",
+     "text": "Variante d'échange."
+    },
+    {
+     "san": "exd5",
+     "text": "On reprend avec le pion e : le fou c8 est libéré.",
+     "arrows": [
+      "c8g4"
+     ]
+    },
+    {
+     "san": "Bg5",
+     "text": "Clouage."
+    },
+    {
+     "san": "c6",
+     "text": "Structure solide, la dame pourra aller en c7 ou b6."
+    },
+    {
+     "san": "e3",
+     "text": "Développement."
+    },
+    {
+     "san": "Be7",
+     "text": "On décloue."
+    },
+    {
+     "san": "Bd3",
+     "text": "Le fou vise h7."
+    },
+    {
+     "san": "Nbd7",
+     "text": "Développement."
+    },
+    {
+     "san": "Qc2",
+     "text": "Pression sur h7.",
+     "arrows": [
+      "c2h7:red"
+     ]
+    },
+    {
+     "san": "O-O",
+     "text": "Roque."
+    },
+    {
+     "san": "Nf3",
+     "text": "Développement."
+    },
+    {
+     "san": "Re8",
+     "text": "La tour sur la colonne e."
+    },
+    {
+     "san": "O-O",
+     "text": "Roque."
+    },
+    {
+     "san": "Nf8",
+     "text": "Manœuvre typique : le cavalier ira en g6 ou e6 défendre le roi.",
+     "arrows": [
+      "f8g6"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "catalane",
+   "name": "Catalane (3.Cf3 et 4.g3)",
+   "base": "orthodoxe",
+   "branchAt": 4,
+   "moves": [
+    {
+     "san": "Nf3",
+     "text": "Développement."
+    },
+    {
+     "san": "Nf6",
+     "text": "Développement."
+    },
+    {
+     "san": "g3",
+     "text": "Catalane : le fou ira en g2 viser d5 et b7."
+    },
+    {
+     "san": "Be7",
+     "text": "Développement."
+    },
+    {
+     "san": "Bg2",
+     "text": "Le fou sur la grande diagonale.",
+     "arrows": [
+      "g2b7:red"
+     ]
+    },
+    {
+     "san": "O-O",
+     "text": "Roque."
+    },
+    {
+     "san": "O-O",
+     "text": "Roque."
+    },
+    {
+     "san": "dxc4",
+     "text": "On prend le pion c4 : on gagne du temps."
+    },
+    {
+     "san": "Qc2",
+     "text": "La dame va reprendre c4."
+    },
+    {
+     "san": "a6",
+     "text": "Prépare ...b5 pour garder le pion."
+    },
+    {
+     "san": "a4",
+     "text": "Empêche ...b5."
+    },
+    {
+     "san": "Bd7",
+     "text": "Le fou va en c6 contrer le fou g2.",
+     "arrows": [
+      "d7c6"
+     ]
+    },
+    {
+     "san": "Qxc4",
+     "text": "Les Blancs reprennent le pion."
+    },
+    {
+     "san": "Bc6",
+     "text": "Le fou bloque la grande diagonale.",
+     "arrows": [
+      "c6g2"
+     ]
+    },
+    {
+     "san": "Bf4",
+     "text": "Développement."
+    },
+    {
+     "san": "a5",
+     "text": "Fixe le pion a4 et donne la case b4 au fou. Position solide.",
+     "squares": [
+      "b4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "elephant",
+   "name": "Piège de l'éléphant",
+   "trap": true,
+   "base": "orthodoxe",
+   "branchAt": 6,
+   "moves": [
+    {
+     "san": "Bg5",
+     "text": "Clouage."
+    },
+    {
+     "san": "Nbd7",
+     "text": "Développement… qui tend un piège !"
+    },
+    {
+     "san": "cxd5",
+     "text": "Échange."
+    },
+    {
+     "san": "exd5",
+     "text": "On reprend."
+    },
+    {
+     "san": "Nxd5",
+     "text": "Les Blancs croient gagner un pion grâce à la clouure…"
+    },
+    {
+     "san": "Nxd5",
+     "text": "On prend quand même, en abandonnant la dame !"
+    },
+    {
+     "san": "Bxd8",
+     "text": "Les Blancs prennent la dame."
+    },
+    {
+     "san": "Bb4+",
+     "text": "Échec ! La dame blanche doit s'interposer.",
+     "arrows": [
+      "b4e1:red"
+     ]
+    },
+    {
+     "san": "Qd2",
+     "text": "Seul coup."
+    },
+    {
+     "san": "Bxd2+",
+     "text": "On prend la dame."
+    },
+    {
+     "san": "Kxd2",
+     "text": "Le roi reprend."
+    },
+    {
+     "san": "Kxd8",
+     "text": "On reprend le fou : une pièce de plus pour les Noirs !"
+    }
+   ]
+  }
+ ]
+}

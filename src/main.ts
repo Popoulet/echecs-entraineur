@@ -4,6 +4,7 @@ import './style.css';
 import { render as analyse } from './pages/analyse';
 import { render as profil } from './pages/profil';
 import { render as parties } from './pages/parties';
+import { render as ouvertures } from './pages/ouvertures';
 import { placeholder } from './pages/placeholder';
 import { db } from './data/db';
 import { progress } from './data/analyzer';
@@ -15,7 +16,7 @@ type Page = (root: HTMLElement, param?: string) => void | (() => void);
 const ROUTES: { path: string; icon: string; label: string; page: Page }[] = [
   { path: 'profil', icon: '👤', label: 'Profil', page: profil },
   { path: 'parties', icon: '📋', label: 'Parties', page: parties },
-  { path: 'ouvertures', icon: '📖', label: 'Ouvertures', page: placeholder('Ouvertures') },
+  { path: 'ouvertures', icon: '📖', label: 'Ouvertures', page: ouvertures },
   { path: 'puzzles', icon: '🧩', label: 'Puzzles', page: placeholder('Puzzles') },
   { path: 'analyse', icon: '🔍', label: 'Analyse', page: analyse },
 ];

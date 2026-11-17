@@ -5,11 +5,19 @@ import { Chess } from 'chess.js';
 import { db } from '../data/db';
 import { analyseGame } from '../data/analyzer';
 import { engine } from '../engine/engine';
-import { formatScore, winPercent } from '../core/eval';
+import { formatScore, toFrench, winPercent } from '../core/eval';
 import { buildReview, CATEGORIES, PHASE_FR, type Category, type Review } from '../core/review';
 import { Board } from '../ui/board';
 import { lineChart } from '../ui/chart';
+import { loadOpenings } from '../data/openingsData';
+import { buildRepertoire, findDeviation, type Deviation } from '../core/openings';
 import type { GameRec } from '../data/types';
+
+/** Sortie de répertoire + noms pour l'affichage. */
+interface RepInfo extends Deviation {
+  openingName: string;
+  lineName: string;
+}
 
 export function renderReview(root: HTMLElement, id: string): () => void {
   let cancelled = false;
@@ -37,7 +45,14 @@ export function renderReview(root: HTMLElement, id: string): () => void {
     }
     const review = buildReview(g);
     if (!review || cancelled) return;
-    show(root, g, review);
+    // où la partie sort-elle de mon répertoire d'ouvertures ?
+    const ops = await loadOpenings();
+    const dev = findDeviation(g.moves, g.myColor, buildRepertoire(ops, g.myColor), g.startFen);
+    const op = dev && ops.find((o) => o.id === dev.openingId);
+    const rep: RepInfo | null = dev && op
+      ? { ...dev, openingName: op.name, lineName: op.lines.find((l) => l.id === dev.lineId)?.name ?? '' }
+      : null;
+    show(root, g, review, rep);
   })();
 
   return () => {
@@ -46,7 +61,7 @@ export function renderReview(root: HTMLElement, id: string): () => void {
   };
 }
 
-function show(root: HTMLElement, g: GameRec, review: Review): void {
+function show(root: HTMLElement, g: GameRec, review: Review, rep: RepInfo | null): void {
   const { moves } = review;
   const evals = g.evals!;
   const startFen = g.startFen ?? new Chess().fen();
@@ -112,7 +127,7 @@ function show(root: HTMLElement, g: GameRec, review: Review): void {
 
   function drawBody(): void {
     const body = $('.rv-body');
-    if (tab === 'resume') return void (body.innerHTML = summaryHtml(g, review));
+    if (tab === 'resume') return void (body.innerHTML = (rep ? `<div class="rv-card">${repHtml(rep)}</div>` : '') + summaryHtml(g, review));
     const m = moves[cur - 1];
     const cat = m && CATEGORIES[m.category];
     body.innerHTML = `
@@ -121,7 +136,8 @@ function show(root: HTMLElement, g: GameRec, review: Review): void {
           <div class="rv-title"><span class="badge" style="background:${cat.color}">${cat.icon}</span>
             <b>${m.label} ${m.san}</b> <span style="color:${cat.color}">${cat.label}</span>
             <span class="muted rv-score">${formatScore(evals[cur])}</span></div>
-          ${m.explanation.map((t) => `<p>${t}</p>`).join('')}`
+          ${m.explanation.map((t) => `<p>${t}</p>`).join('')}
+          ${rep && rep.ply === cur - 1 ? repHtml(rep) : ''}`
         : '<p class="muted">Position de départ. Utilise ▶ ou touche un coup / le graphique.</p>'}
       </div>
       <div class="movelist">${moveListHtml()}</div>`;
@@ -136,7 +152,8 @@ function show(root: HTMLElement, g: GameRec, review: Review): void {
       const cat = CATEGORIES[m.category];
       const mark = ['brillant', 'imprecision', 'erreur', 'gaffe', 'manque'].includes(m.category)
         ? `<i style="color:${cat.color}">${cat.icon}</i>` : '';
-      html += `<button class="mv ${cur === i + 1 ? 'on' : ''}" data-ply="${i + 1}">${m.san}${mark}</button>`;
+      const book = rep && rep.ply === i ? '<i title="sortie du répertoire">📖</i>' : '';
+      html += `<button class="mv ${cur === i + 1 ? 'on' : ''}" data-ply="${i + 1}">${m.san}${mark}${book}</button>`;
     });
     return html;
   }
@@ -166,6 +183,14 @@ function show(root: HTMLElement, g: GameRec, review: Review): void {
 
   // aller au premier moment clé de mes coups, sinon au départ
   go(0);
+}
+
+/** Message "sortie du répertoire" avec lien vers la leçon. */
+function repHtml(r: RepInfo): string {
+  const exp = r.expected.map(toFrench).join(' ou ');
+  const who = r.byMe ? 'Tu es sorti' : "L'adversaire est sorti";
+  return `<p class="rep">📖 <b>${who} du répertoire</b> (${r.openingName} – ${r.lineName}) : la leçon jouait <b>${exp}</b>.
+    <a href="#/ouvertures/${r.openingId}/lecon">Revoir la leçon →</a></p>`;
 }
 
 /** Onglet Résumé : nombre de coups par catégorie, moments clés, phases. */

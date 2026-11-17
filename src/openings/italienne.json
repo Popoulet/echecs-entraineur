@@ -1,0 +1,466 @@
+{
+ "id": "italienne",
+ "name": "Partie italienne",
+ "color": "w",
+ "description": "1.e4 e5 2.Cf3 Cc6 3.Fc4 : le fou vise f7, le point faible des Noirs. Une ouverture classique, logique et facile à jouer.",
+ "plans": [
+  "Jouer c3 puis d4 au bon moment pour prendre tout le centre.",
+  "Manœuvre Cbd2-f1-g3 : le cavalier vient attaquer le roque noir (cases f5, h5).",
+  "Garder le fou c4 (puis c2) braqué sur le roi noir.",
+  "a4 empêche ...b5, h3 empêche ...Fg4 : petits coups utiles avant d'attaquer.",
+  "Contre ...Cd4 (piège Blackburne-Shilling) : Cxd4, jamais Cxe5 !"
+ ],
+ "lines": [
+  {
+   "id": "pianissimo",
+   "name": "Giuoco Pianissimo (3...Fc5)",
+   "moves": [
+    {
+     "san": "e4",
+     "text": "Le pion prend le centre et libère la dame et le fou f1.",
+     "squares": [
+      "d5",
+      "f5"
+     ]
+    },
+    {
+     "san": "e5",
+     "text": "Les Noirs répondent pareil et prennent leur part du centre."
+    },
+    {
+     "san": "Nf3",
+     "text": "Développement avec menace : le cavalier attaque le pion e5.",
+     "arrows": [
+      "f3e5:red"
+     ]
+    },
+    {
+     "san": "Nc6",
+     "text": "Les Noirs défendent e5 en développant un cavalier.",
+     "arrows": [
+      "c6e5:blue"
+     ]
+    },
+    {
+     "san": "Bc4",
+     "text": "Le fou vise f7, case faible défendue seulement par le roi.",
+     "arrows": [
+      "c4f7:red"
+     ],
+     "squares": [
+      "f7"
+     ]
+    },
+    {
+     "san": "Bc5",
+     "text": "Les Noirs copient : leur fou vise f2.",
+     "arrows": [
+      "c5f2:red"
+     ]
+    },
+    {
+     "san": "c3",
+     "text": "Prépare d4 pour prendre le centre, et offre plus tard une retraite au fou en c2.",
+     "arrows": [
+      "d2d4:yellow"
+     ]
+    },
+    {
+     "san": "Nf6",
+     "text": "Développement : le cavalier attaque e4.",
+     "arrows": [
+      "f6e4:red"
+     ]
+    },
+    {
+     "san": "d3",
+     "text": "On défend e4 calmement. Style « Pianissimo » : solide, d4 viendra plus tard."
+    },
+    {
+     "san": "d6",
+     "text": "Les Noirs consolident e5 et ouvrent la diagonale du fou c8."
+    },
+    {
+     "san": "O-O",
+     "text": "Roque : le roi est à l'abri et la tour se rapproche du centre."
+    },
+    {
+     "san": "O-O",
+     "text": "Les Noirs roquent aussi."
+    },
+    {
+     "san": "Re1",
+     "text": "La tour soutient e4 et prépare d4.",
+     "arrows": [
+      "e1e4:blue"
+     ]
+    },
+    {
+     "san": "a6",
+     "text": "Prépare une retraite en a7 pour le fou et empêche Fb5."
+    },
+    {
+     "san": "a4",
+     "text": "Gagne de l'espace et empêche ...b5 qui chasserait le fou c4.",
+     "squares": [
+      "b5"
+     ]
+    },
+    {
+     "san": "Ba7",
+     "text": "Le fou se met à l'abri d'une attaque d4 ou b4, en gardant la diagonale vers f2.",
+     "arrows": [
+      "a7f2"
+     ]
+    },
+    {
+     "san": "h3",
+     "text": "Empêche ...Fg4 qui clouerait le cavalier f3 sur la dame.",
+     "arrows": [
+      "c8g4:red"
+     ]
+    },
+    {
+     "san": "h6",
+     "text": "Les Noirs font pareil contre Fg5."
+    },
+    {
+     "san": "Nbd2",
+     "text": "Le dernier cavalier sort ; il ira en f1 puis g3 vers le roque noir.",
+     "arrows": [
+      "d2f1",
+      "f1g3"
+     ]
+    },
+    {
+     "san": "Re8",
+     "text": "Les Noirs renforcent e5. Plan blanc : Cf1-g3, puis d4 au bon moment."
+    }
+   ]
+  },
+  {
+   "id": "deux-cavaliers",
+   "name": "Deux cavaliers (3...Cf6)",
+   "base": "pianissimo",
+   "branchAt": 5,
+   "moves": [
+    {
+     "san": "Nf6",
+     "text": "Défense des deux cavaliers : attaque immédiate de e4.",
+     "arrows": [
+      "f6e4:red"
+     ]
+    },
+    {
+     "san": "d3",
+     "text": "On défend e4 simplement, en évitant Cg5 et ses complications tactiques."
+    },
+    {
+     "san": "Be7",
+     "text": "Développement prudent, prêt à roquer."
+    },
+    {
+     "san": "O-O",
+     "text": "Roque."
+    },
+    {
+     "san": "O-O",
+     "text": "Les Noirs roquent."
+    },
+    {
+     "san": "Re1",
+     "text": "La tour soutient e4 et occupe la colonne e."
+    },
+    {
+     "san": "d6",
+     "text": "Les Noirs consolident e5."
+    },
+    {
+     "san": "c3",
+     "text": "Prépare d4 et une case c2 pour le fou."
+    },
+    {
+     "san": "Na5",
+     "text": "Le cavalier chasse le fou c4, très gênant pour les Noirs.",
+     "arrows": [
+      "a5c4:red"
+     ]
+    },
+    {
+     "san": "Bb5",
+     "text": "Le fou évite l'échange ; il ira en a4 puis c2."
+    },
+    {
+     "san": "a6",
+     "text": "Les Noirs chassent le fou."
+    },
+    {
+     "san": "Ba4",
+     "text": "Le fou recule en gardant sa diagonale."
+    },
+    {
+     "san": "b5",
+     "text": "Encore une poussée pour chasser le fou."
+    },
+    {
+     "san": "Bc2",
+     "text": "Le fou est bien placé : il vise h7 derrière e4.",
+     "arrows": [
+      "c2h7"
+     ]
+    },
+    {
+     "san": "c5",
+     "text": "Les Noirs gagnent de l'espace à l'aile dame. Plan blanc : Cbd2-f1-g3 et d4."
+    }
+   ]
+  },
+  {
+   "id": "hongroise",
+   "name": "Hongroise (3...Fe7)",
+   "base": "pianissimo",
+   "branchAt": 5,
+   "moves": [
+    {
+     "san": "Be7",
+     "text": "Défense hongroise : passive mais solide."
+    },
+    {
+     "san": "d4",
+     "text": "Contre une défense passive, on attaque le centre tout de suite !",
+     "arrows": [
+      "d4e5:red"
+     ]
+    },
+    {
+     "san": "exd4",
+     "text": "Les Noirs échangent au centre."
+    },
+    {
+     "san": "Nxd4",
+     "text": "Le cavalier reprend, très actif au centre.",
+     "squares": [
+      "d4"
+     ]
+    },
+    {
+     "san": "Nf6",
+     "text": "Le cavalier attaque e4.",
+     "arrows": [
+      "f6e4:red"
+     ]
+    },
+    {
+     "san": "Nc3",
+     "text": "On défend e4 en développant."
+    },
+    {
+     "san": "O-O",
+     "text": "Les Noirs roquent."
+    },
+    {
+     "san": "O-O",
+     "text": "Roque : les Blancs ont plus d'espace grâce au pion e4."
+    },
+    {
+     "san": "d6",
+     "text": "Libère le fou c8."
+    },
+    {
+     "san": "h3",
+     "text": "Empêche ...Cg4 et ...Fg4."
+    },
+    {
+     "san": "Re8",
+     "text": "Pression sur e4."
+    },
+    {
+     "san": "Re1",
+     "text": "On défend e4."
+    },
+    {
+     "san": "Bf8",
+     "text": "Le fou laisse la colonne e à la tour."
+    },
+    {
+     "san": "Bf4",
+     "text": "Dernier développement : le fou vise d6.",
+     "arrows": [
+      "f4d6"
+     ]
+    },
+    {
+     "san": "a6",
+     "text": "Les Blancs ont plus d'espace. Plan : Dd2, Tad1 et jeu au centre."
+    }
+   ]
+  },
+  {
+   "id": "blackburne",
+   "name": "Piège : Blackburne-Shilling bien joué",
+   "trap": true,
+   "base": "pianissimo",
+   "branchAt": 5,
+   "moves": [
+    {
+     "san": "Nd4",
+     "text": "Piège de Blackburne-Shilling : e5 semble sans défense…",
+     "arrows": [
+      "f3e5:red"
+     ]
+    },
+    {
+     "san": "Nxd4",
+     "text": "Le bon coup : on échange ce cavalier. Surtout PAS Cxe5 (voir le piège suivant) !"
+    },
+    {
+     "san": "exd4",
+     "text": "Les Noirs reprennent."
+    },
+    {
+     "san": "O-O",
+     "text": "Roque, on reste calme."
+    },
+    {
+     "san": "Bc5",
+     "text": "Coup naturel… mais c'est une erreur."
+    },
+    {
+     "san": "Bxf7+",
+     "text": "Sacrifice : le fou prend f7 avec échec !",
+     "squares": [
+      "f7"
+     ]
+    },
+    {
+     "san": "Kxf7",
+     "text": "Le roi doit prendre."
+    },
+    {
+     "san": "Qh5+",
+     "text": "Fourchette : échec au roi ET attaque du fou c5.",
+     "arrows": [
+      "h5f7:red",
+      "h5c5:red"
+     ]
+    },
+    {
+     "san": "g6",
+     "text": "Les Noirs parent l'échec."
+    },
+    {
+     "san": "Qxc5",
+     "text": "On récupère la pièce : un pion de plus et un roi noir exposé."
+    }
+   ]
+  },
+  {
+   "id": "blackburne-erreur",
+   "name": "Piège à éviter : prendre e5",
+   "trap": true,
+   "train": false,
+   "base": "pianissimo",
+   "branchAt": 5,
+   "moves": [
+    {
+     "san": "Nd4",
+     "text": "Le même piège…"
+    },
+    {
+     "san": "Nxe5",
+     "text": "ERREUR : prendre e5 semble gagner un pion…"
+    },
+    {
+     "san": "Qg5",
+     "text": "La dame attaque e5 ET g2.",
+     "arrows": [
+      "g5g2:red",
+      "g5e5:red"
+     ]
+    },
+    {
+     "san": "Nxf7",
+     "text": "Les Blancs attaquent dame et tour… mais c'est trop tard."
+    },
+    {
+     "san": "Qxg2",
+     "text": "La dame prend g2 et menace la tour h1."
+    },
+    {
+     "san": "Rf1",
+     "text": "La tour se sauve."
+    },
+    {
+     "san": "Qxe4+",
+     "text": "Échec !"
+    },
+    {
+     "san": "Be2",
+     "text": "Le fou s'interpose…"
+    },
+    {
+     "san": "Nf3#",
+     "text": "Mat étouffé ! Retiens : contre ...Cd4, joue Cxd4, ne prends jamais e5."
+    }
+   ]
+  },
+  {
+   "id": "legal",
+   "name": "Piège : le mat de Légal",
+   "trap": true,
+   "base": "pianissimo",
+   "branchAt": 5,
+   "moves": [
+    {
+     "san": "d6",
+     "text": "Défense Philidor : solide mais passive."
+    },
+    {
+     "san": "Nc3",
+     "text": "Développement."
+    },
+    {
+     "san": "Bg4",
+     "text": "Le fou cloue le cavalier f3 sur la dame.",
+     "arrows": [
+      "g4d1:red"
+     ]
+    },
+    {
+     "san": "h3",
+     "text": "On demande au fou de se décider."
+    },
+    {
+     "san": "Bh5",
+     "text": "Le fou garde la clouure… ce qui permet un piège !"
+    },
+    {
+     "san": "Nxe5",
+     "text": "Le cavalier saute malgré la clouure : on abandonne la dame !",
+     "arrows": [
+      "h5d1:red"
+     ]
+    },
+    {
+     "san": "Bxd1",
+     "text": "Gourmand : les Noirs prennent la dame."
+    },
+    {
+     "san": "Bxf7+",
+     "text": "Échec : le roi doit avancer.",
+     "squares": [
+      "f7"
+     ]
+    },
+    {
+     "san": "Ke7",
+     "text": "Seul coup."
+    },
+    {
+     "san": "Nd5#",
+     "text": "Mat de Légal ! (Après 6...Cxe5, ce piège échoue : ne le tente que contre un adversaire gourmand.)"
+    }
+   ]
+  }
+ ]
+}
