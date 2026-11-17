@@ -59,6 +59,12 @@ export class Board {
     }
   }
 
+  /** Affiche une position (mode lecture, ex. revue de partie) avec le dernier coup surligné. */
+  setPosition(fen: string, last?: { from: string; to: string }): void {
+    this.game.load(fen);
+    this.sync(last as Move | undefined);
+  }
+
   undo(): void {
     this.game.undo();
     const h = this.game.history({ verbose: true });

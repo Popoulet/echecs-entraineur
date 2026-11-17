@@ -76,7 +76,7 @@ export function render(root: HTMLElement): () => void {
             ${recentGames.map((g) => {
               const opp = g.myColor === 'w' ? `${g.black} (${g.blackElo ?? '?'})` : `${g.white} (${g.whiteElo ?? '?'})`;
               const a = myAccuracy(g);
-              return `<div class="game-row">
+              return `<div class="game-row" data-id="${g.id}">
                 <span>${g.myColor === 'w' ? '⚪' : '⚫'} ${opp}</span>
                 <span class="res-${g.result}">${RESULT_FR[g.result]}</span>
                 <span>${a !== undefined ? a.toFixed(0) + ' %' : '<small class="muted">…</small>'}</span>
@@ -113,6 +113,8 @@ export function render(root: HTMLElement): () => void {
   };
 
   root.addEventListener('click', async (e) => {
+    const gameId = (e.target as HTMLElement).closest<HTMLElement>('.game-row')?.dataset.id;
+    if (gameId) location.hash = `#/parties/${encodeURIComponent(gameId)}`;
     const b = (e.target as HTMLElement).closest('button');
     if (!b) return;
     if (b.dataset.acc) {

@@ -115,3 +115,51 @@ cg-board square.hl-info { background: rgba(80, 140, 230, 0.5); }
 .statusbar { position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 20;
   background: var(--panel2); padding: 10px 16px; border-radius: 20px; font-size: 0.9rem; pointer-events: none; }
 @media (orientation: portrait) { .statusbar { bottom: calc(var(--nav) + 12px); } }
+
+.page-root { height: 100%; }
+
+/* ---------- Liste des parties ---------- */
+.list { display: flex; flex-direction: column; gap: 8px; }
+.game-item { display: grid; grid-template-columns: 1fr 110px 110px 130px; align-items: center; gap: 12px; text-align: left;
+  min-height: 72px; padding: 8px 16px; border: 0; border-left: 6px solid var(--panel2); border-radius: 10px;
+  background: var(--panel); color: var(--text); font-size: 1rem; }
+.game-item:active { background: var(--panel2); }
+.res-border-win { border-left-color: var(--accent); }
+.res-border-loss { border-left-color: #e06c5a; }
+.gi-acc { font-weight: 700; }
+.game-row { cursor: pointer; }
+@media (orientation: portrait) { .game-item { grid-template-columns: 1fr 90px 90px; } .game-item > small { display: none; } }
+
+/* ---------- Revue de partie ---------- */
+.rv-head { display: flex; gap: 12px; align-items: center; }
+.rv-head .btn { min-width: var(--touch); padding: 0; font-size: 1.4rem; }
+.rv-players { flex: 1; line-height: 1.6; }
+.rv-tabs { margin: 0; }
+.rv-body { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 10px; overflow: auto; }
+.rv-card { background: var(--panel); border-radius: 12px; padding: 12px 16px; }
+.rv-card p { margin: 6px 0; }
+.rv-card h4 { margin: 0 0 8px; }
+.rv-title { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 1.1rem; }
+.rv-score { margin-left: auto; }
+.badge { display: inline-grid; place-items: center; min-width: 30px; height: 30px; padding: 0 4px; border-radius: 15px;
+  color: #fff; font-weight: 800; font-size: 0.9rem; }
+.movelist { display: grid; grid-template-columns: 48px 1fr 1fr; gap: 4px; align-content: start; }
+.mv-num { color: var(--muted); align-self: center; }
+.mv { min-height: 44px; border: 0; border-radius: 8px; background: transparent; color: var(--text); font-size: 1rem; text-align: left; padding: 0 10px; }
+.mv.on { background: var(--accent); color: #fff; }
+.mv i { font-style: normal; font-weight: 800; margin-left: 6px; }
+.btn-row.four { grid-template-columns: repeat(4, 1fr); }
+.btn-row.four .btn { font-size: 1.5rem; }
+.rv-table { width: 100%; border-collapse: collapse; }
+.rv-table td, .rv-table th { padding: 6px 4px; text-align: center; }
+.rv-table td:first-child { text-align: left; }
+.km { display: flex; gap: 12px; align-items: center; width: 100%; text-align: left; min-height: 56px; border: 0;
+  background: transparent; color: var(--text); font-size: 1rem; border-bottom: 1px solid var(--panel2); }
+/* couleur des cases du coup selon sa catégorie */
+cg-board square.cat-brillant { background: rgba(27, 172, 166, 0.5); }
+cg-board square.cat-meilleur, cg-board square.cat-excellent { background: rgba(129, 182, 76, 0.45); }
+cg-board square.cat-bon { background: rgba(151, 175, 139, 0.45); }
+cg-board square.cat-imprecision { background: rgba(247, 192, 69, 0.5); }
+cg-board square.cat-erreur { background: rgba(229, 143, 42, 0.5); }
+cg-board square.cat-gaffe { background: rgba(202, 52, 49, 0.55); }
+cg-board square.cat-manque { background: rgba(255, 119, 105, 0.5); }

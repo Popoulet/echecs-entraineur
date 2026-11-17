@@ -3,17 +3,18 @@
 import './style.css';
 import { render as analyse } from './pages/analyse';
 import { render as profil } from './pages/profil';
+import { render as parties } from './pages/parties';
 import { placeholder } from './pages/placeholder';
 import { db } from './data/db';
 import { progress } from './data/analyzer';
 import { syncAllAndAnalyse, syncMessage } from './data/startup';
 
 /** Une page reçoit son conteneur et peut renvoyer une fonction de nettoyage. */
-type Page = (root: HTMLElement) => void | (() => void);
+type Page = (root: HTMLElement, param?: string) => void | (() => void);
 
 const ROUTES: { path: string; icon: string; label: string; page: Page }[] = [
   { path: 'profil', icon: '👤', label: 'Profil', page: profil },
-  { path: 'parties', icon: '📋', label: 'Parties', page: placeholder('Revue de partie') },
+  { path: 'parties', icon: '📋', label: 'Parties', page: parties },
   { path: 'ouvertures', icon: '📖', label: 'Ouvertures', page: placeholder('Ouvertures') },
   { path: 'puzzles', icon: '🧩', label: 'Puzzles', page: placeholder('Puzzles') },
   { path: 'analyse', icon: '🔍', label: 'Analyse', page: analyse },
@@ -32,12 +33,17 @@ let cleanup: void | (() => void);
 
 /** Affiche la page correspondant au hash courant. */
 function route(): void {
-  const path = location.hash.replace('#/', '') || 'profil';
-  const r = ROUTES.find((x) => x.path === path) ?? ROUTES[ROUTES.length - 1];
+  // "#/parties/lichess:abc" → page "parties", paramètre "lichess:abc"
+  const [path, ...rest] = (location.hash.replace('#/', '') || 'profil').split('/');
+  const param = rest.length ? decodeURIComponent(rest.join('/')) : undefined;
+  const r = ROUTES.find((x) => x.path === path) ?? ROUTES[0];
   if (typeof cleanup === 'function') cleanup();
   app.querySelectorAll('.nav a').forEach((a) => a.classList.toggle('active', a.getAttribute('href') === `#/${r.path}`));
-  main.innerHTML = '';
-  cleanup = r.page(main);
+  // conteneur neuf à chaque page : les écouteurs de l'ancienne page disparaissent avec lui
+  const page = document.createElement('div');
+  page.className = 'page-root';
+  main.replaceChildren(page);
+  cleanup = r.page(page, param);
 }
 
 addEventListener('hashchange', route);

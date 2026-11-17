@@ -27,7 +27,7 @@ Stockfish 18 lite mono-thread (npm stockfish, copié dans public/ par scripts/co
 - [x] SPEC.md / CLAUDE.md
 - [x] Squelette + GitHub Action + APK installé sur la tablette (v0.1.1)
 - [x] Échiquier tactile (chessground) + Stockfish 18 lite mono-thread + page Analyse
-- [~] 1. Profil (sync Chess.com/Lichess, import PGN, analyse de fond prof. 12, précision Lichess, stats, sauvegarde JSON) — à tester sur tablette
-- [ ] 2. Revue de partie
+- [x] 1. Profil (sync Chess.com/Lichess, import PGN, analyse de fond prof. 12, précision Lichess, stats, sauvegarde JSON)
+- [~] 2. Revue de partie (core/review.ts : classement + explications par règles ; test : scripts/review-test.ts avec Node 20) — à tester sur tablette
 - [ ] 3. Ouvertures
 - [ ] 4. Puzzles
