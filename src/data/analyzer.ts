@@ -4,6 +4,7 @@ import { Chess } from 'chess.js';
 import { engine } from '../engine/engine';
 import { gameAccuracy } from '../core/accuracy';
 import { db, notifyChange } from './db';
+import { puzzlesFromGame } from './puzzles';
 import type { GameRec, PosEval } from './types';
 
 const DEPTH = 12; // compromis vitesse / batterie / fiabilité
@@ -29,7 +30,7 @@ export async function runBackgroundAnalysis(): Promise<void> {
     for (const g of games) {
       const fresh = await db.get<GameRec>('games', g.id);
       if (fresh?.evals) continue; // déjà analysée entre-temps (ex. ouverte en revue)
-      await analyseGame(g);
+      await puzzlesFromGame(await analyseGame(g)); // les erreurs deviennent des puzzles
       progress.done++;
       status();
       notifyChange();

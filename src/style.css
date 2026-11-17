@@ -192,3 +192,4 @@ a.chip { display: inline-flex; align-items: center; text-decoration: none; }
 .notes { width: 100%; min-height: 140px; padding: 12px 16px; font-size: 1.05rem; resize: vertical; }
 .side .input { width: 100%; }
 .rep { margin: 8px 0 0; padding-top: 8px; border-top: 1px solid var(--panel2); } .rep a { color: var(--accent); }
+.btn:disabled { opacity: 0.4; }

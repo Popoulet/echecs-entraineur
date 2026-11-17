@@ -42,7 +42,7 @@ g.evals = evals; g.accuracy = gameAccuracy(evals);
 const rv = buildReview(g)!;
 console.log(`${g.white} - ${g.black} | ${g.opening} | précision B ${g.accuracy.w.toFixed(1)} / N ${g.accuracy.b.toFixed(1)}`);
 for (const m of rv.moves) if (!['meilleur', 'excellent', 'bon'].includes(m.category))
-  console.log(`${m.label} ${m.san} [${CATEGORIES[m.category].label}] perte ${m.loss.toFixed(1)} — ${m.explanation.join(' ')}`);
+  console.log(`${m.label} ${m.san} [${CATEGORIES[m.category].label}] perte ${m.loss.toFixed(1)} {${m.themes.join(", ")}} — ${m.explanation.join(" ")}`);
 console.log('Moments clés :', rv.keyMoments.map((m) => m.label + ' ' + m.san).join(', '));
 console.log('Phases :', JSON.stringify(rv.phaseAccuracy), '→ plus faible :', rv.weakestPhase);
 send('quit'); sf.kill();

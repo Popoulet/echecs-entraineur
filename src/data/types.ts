@@ -37,4 +37,5 @@ export interface GameRec {
   moves: string[]; // coups SAN
   evals?: PosEval[]; // une par position (moves.length + 1), remplie par l'analyse
   accuracy?: { w: number; b: number };
+  puzzled?: boolean; // puzzles déjà créés à partir de cette partie
 }

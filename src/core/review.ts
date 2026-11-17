@@ -37,6 +37,7 @@ export interface MoveReview {
   bestSan?: string;
   reply?: string; // meilleure réponse adverse (UCI) après le coup joué
   explanation: string[];
+  themes: string[]; // thèmes tactiques (pour les puzzles)
   phase: Phase;
 }
 
@@ -105,6 +106,7 @@ export function buildReview(g: GameRec): Review | null {
       bestSan: bestMove ? toFrench(bestMove.san) : undefined,
       reply: e1.best,
       explanation: [],
+      themes: [],
       phase,
     };
 
@@ -150,14 +152,20 @@ function explain(m: MoveReview, before: string, after: Chess, e0: PosEval, e1: P
     return [`Bon coup. ${m.bestSan ? `Le moteur préférait ${m.bestSan}.` : ''}`.trim()];
   }
 
-  if (m.category === 'manque' && !(mateFor(e0, c) !== undefined)) out.push("L'adversaire venait de se tromper, mais ce coup ne le punit pas.");
+  const th = m.themes;
+  if (m.category === 'manque' && !(mateFor(e0, c) !== undefined)) {
+    out.push("L'adversaire venait de se tromper, mais ce coup ne le punit pas.");
+    th.push('Punir une erreur');
+  }
 
   // 1. Mat manqué
   const mate0 = mateFor(e0, c);
+  if (mate0 !== undefined && mateFor(e1, c) === undefined) th.push('Mat');
   if (mate0 !== undefined && mateFor(e1, c) === undefined) out.push(`Mat manqué : il y avait un mat en ${mate0}${m.bestSan ? ` en commençant par ${m.bestSan}` : ''}.`);
 
   // 2. Le coup permet un mat
   const mateOpp = mateFor(e1, opp(c));
+  if (mateOpp !== undefined) th.push('Défense contre le mat');
   if (mateOpp !== undefined) out.push(`Ce coup permet à l'adversaire de mater en ${mateOpp}${replySan ? ` (${replySan})` : ''}.`);
 
   // 3. Pièce laissée en prise
@@ -170,25 +178,29 @@ function explain(m: MoveReview, before: string, after: Chess, e0: PosEval, e1: P
   if (hanging.length && mateOpp === undefined) {
     const p = hanging.sort((a, b) => VALUE[b.type] - VALUE[a.type])[0];
     const takes = replyMove && replyMove.to === p.sq;
+    th.push('Pièce en prise');
     out.push(`${cap(ton(p.type))} en ${p.sq} est en prise${takes ? ` : ${replySan} le gagne` : ''}.`);
   }
 
   // 4. Échange perdant
   if (m.move.captured && VALUE[m.move.piece] > VALUE[m.move.captured] + 1 && after.attackers(m.move.to as Square, opp(c)).length)
-    out.push(`Échange perdant : ${ton(m.move.piece)} contre ${un(m.move.captured)}.`);
+    out.push(`Échange perdant : ${ton(m.move.piece)} contre ${un(m.move.captured)}.`), th.push('Échange');
 
   // 5. Tactique manquée (fourchette, gain de matériel)
   if (bestMove && !out.some((s) => s.startsWith('Mat manqué'))) {
     const afterBest = new Chess(bestMove.after);
     const targets = forkTargets(afterBest, bestMove.to as Square);
     const gain = pvMaterialGain(before, e0.pv ?? [], c);
+    if (targets.length >= 2) th.push('Fourchette');
+    else if (gain >= 2) th.push('Gain de matériel');
     if (targets.length >= 2)
       out.push(`Tactique manquée : ${m.bestSan} faisait une fourchette sur ${targets.map((t) => `${PIECE_FR[t.type]} (${t.sq})`).join(' et ')}.`);
     else if (gain >= 2) out.push(`Tactique manquée : ${m.bestSan} gagnait du matériel (${gain >= 9 ? 'la dame' : gain >= 5 ? 'une tour' : gain >= 3 ? 'une pièce' : 'des pions'}).`);
   }
 
   // 6. Roi exposé
-  if (kingWeakened(before, m.move) && out.length < 2) out.push('Ce coup affaiblit la protection de ton roi.');
+  if (kingWeakened(before, m.move) && out.length < 2) out.push('Ce coup affaiblit la protection de ton roi.'), th.push('Sécurité du roi');
+  if (!th.length) th.push('Positionnel');
 
   // 7. La meilleure réponse adverse (si elle n'a pas déjà été citée)
   if (replySan && !out.some((t) => t.includes(replySan)))
