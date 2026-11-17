@@ -13,6 +13,8 @@
   "dependencies": {
     "@capacitor/android": "6.2.0",
     "@capacitor/core": "6.2.0",
+    "@capacitor/filesystem": "6.0.4",
+    "@capacitor/share": "6.0.4",
     "chess.js": "1.4.0",
     "chessground": "9.2.1",
     "stockfish": "18.0.7"
