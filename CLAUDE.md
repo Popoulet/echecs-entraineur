@@ -3,8 +3,8 @@
 Appli Android d'entraînement aux échecs pour OnePlus Pad 3. Cahier des charges : `SPEC.md`.
 
 ## Stack
-Vite + TypeScript (sans framework), Capacitor (Android), chess.js, échiquier maison (SVG, pointer events),
-Stockfish WASM mono-thread dans un Web Worker, IndexedDB. APK compilé et signé par GitHub Actions.
+Vite + TypeScript (sans framework), Capacitor (Android), chess.js, échiquier chessground,
+Stockfish 18 lite mono-thread (npm stockfish, copié dans public/ par scripts/copy-engine.mjs) en Web Worker, IndexedDB. APK compilé et signé par GitHub Actions.
 
 ## Structure (prévue)
 - `src/main.ts` — démarrage, routeur simple
@@ -25,7 +25,8 @@ Stockfish WASM mono-thread dans un Web Worker, IndexedDB. APK compilé et signé
 
 ## Avancement
 - [x] SPEC.md / CLAUDE.md
-- [~] Squelette + GitHub Action (fait) — reste : vérifier l'installation de l'APK sur la tablette
+- [x] Squelette + GitHub Action + APK installé sur la tablette (v0.1.1)
+- [~] Échiquier tactile (chessground) + Stockfish 18 lite mono-thread + page Analyse — à tester sur tablette
 - [ ] 1. Profil
 - [ ] 2. Revue de partie
 - [ ] 3. Ouvertures
