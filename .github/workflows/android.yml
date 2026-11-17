@@ -1,0 +1,70 @@
+# Compile l'APK signé à chaque push sur main et le publie dans les Releases GitHub.
+# Secrets requis : ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS
+name: APK Android
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # lancement manuel depuis l'onglet Actions
+
+permissions:
+  contents: write # nécessaire pour créer la Release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Build web
+        run: |
+          npm ci
+          npm run build
+        env:
+          BUILD_NUMBER: ${{ github.run_number }}
+
+      # Le dossier android/ n'est pas versionné : il est régénéré à chaque build
+      - name: Projet Android (Capacitor)
+        run: |
+          npx cap add android
+          npx cap sync android
+          # versionCode croissant pour que chaque APK s'installe par-dessus le précédent
+          sed -i "s/versionCode 1$/versionCode ${{ github.run_number }}/" android/app/build.gradle
+          sed -i "s/versionName \"1.0\"/versionName \"0.1.${{ github.run_number }}\"/" android/app/build.gradle
+
+      - name: Gradle assembleRelease
+        working-directory: android
+        run: ./gradlew assembleRelease --no-daemon
+
+      - name: Signature de l'APK
+        env:
+          KS_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KS_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          echo "$KS_B64" | base64 -d > release.jks
+          BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
+          "$BT/zipalign" -f 4 android/app/build/outputs/apk/release/app-release-unsigned.apk aligned.apk
+          "$BT/apksigner" sign --ks release.jks --ks-pass env:KS_PASS --key-pass env:KS_PASS \
+            --ks-key-alias "$KS_ALIAS" --out echecs-entraineur.apk aligned.apk
+          "$BT/apksigner" verify echecs-entraineur.apk
+          rm release.jks
+
+      - name: Release GitHub
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v0.1.${{ github.run_number }}
+          name: Échecs Entraîneur 0.1.${{ github.run_number }}
+          body: "Commit ${{ github.sha }} : ${{ github.event.head_commit.message }}"
+          files: echecs-entraineur.apk
+          make_latest: true

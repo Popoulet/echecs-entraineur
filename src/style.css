@@ -1,0 +1,20 @@
+/* Thème sombre : toutes les couleurs passent par ces variables */
+:root {
+  --bg: #161512;
+  --panel: #262421;
+  --text: #e8e6e3;
+  --muted: #9a9894;
+  --accent: #81b64c;
+  --touch: 56px; /* hauteur minimale d'une cible tactile */
+  color-scheme: dark;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
+  font: 18px/1.4 system-ui, sans-serif; user-select: none; overscroll-behavior: none; }
+#app { height: 100%; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 24px; padding: env(safe-area-inset-top) 24px env(safe-area-inset-bottom); }
+h1 { margin: 0; font-size: 2.2rem; }
+.btn { min-height: var(--touch); min-width: 200px; padding: 0 28px; border: 0; border-radius: 12px;
+  background: var(--accent); color: #fff; font-size: 1.2rem; font-weight: 600; }
+.btn:active { filter: brightness(0.85); }
+.muted { color: var(--muted); }
