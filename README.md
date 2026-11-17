@@ -22,7 +22,7 @@ src/openings/*.json  leçons d'ouvertures (modifiables)
 
 ## Obtenir l'APK
 Push sur `main` → onglet Actions → l'APK apparaît dans **Releases**.
-Lien fixe à garder en favori sur la tablette : `https://github.com/<compte>/<dépôt>/releases/latest/download/echecs-entraineur.apk`.
+Lien fixe à garder en favori sur la tablette : `https://github.com/Popoulet/echecs-entraineur/releases/latest/download/echecs-entraineur.apk`.
 
 ## Ajouter une fonctionnalité
 1. Logique pure dans `src/core/` (sans DOM), données dans `src/data/`.
