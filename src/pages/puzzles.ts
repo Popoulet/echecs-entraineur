@@ -1,5 +1,6 @@
 // Page Puzzles : positions tirées de mes erreurs, en répétition espacée, avec stats par thème.
 import type { Key } from 'chessground/types';
+import type { DrawShape } from 'chessground/draw';
 import { Chess } from 'chess.js';
 import { db } from '../data/db';
 import { generateAllPuzzles, themeStats, type Puzzle } from '../data/puzzles';
@@ -107,6 +108,7 @@ function solve(root: HTMLElement, p: Puzzle, n: number, total: number, onResult:
           <p><b>Trouve le meilleur coup pour les ${side}.</b></p>
           <p class="muted">Contre ${p.opponent}, le ${new Date(p.date).toLocaleDateString('fr-FR')}.
             Thème${p.themes.length > 1 ? 's' : ''} : ${p.themes.join(', ')}</p>
+          ${p.lastSan ? `<p>Ton adversaire vient de jouer <b>${p.lastSan}</b> <span class="opp-arrow">(flèche bleue)</span>.</p>` : ''}
         </div>
         <div class="rv-card trainer-msg info">À toi de jouer.</div>
         <div class="btn-row">
@@ -121,12 +123,21 @@ function solve(root: HTMLElement, p: Puzzle, n: number, total: number, onResult:
     $('.trainer-msg').innerHTML = html;
     $('.trainer-msg').className = `rv-card trainer-msg ${kind}`;
   };
+  const MAX_TRIES = 3; // essais par coup avant de montrer la solution
   let step = 0; // index dans la solution
+  let tries = 0; // essais ratés sur le coup courant
+  let firstTry = true; // aucun essai raté sur tout le puzzle
   let helped = false; // indice utilisé
   let finished = false;
   const board = new Board($('.board'), { fen: p.fen, orientation: p.color === 'w' ? 'white' : 'black', movable: p.color === 'w' ? 'white' : 'black', onMove: (m) => onMove(m.from + m.to + (m.promotion ?? '')) });
 
-  const arrow = (uci: string) => board.setShapes([{ orig: uci.slice(0, 2) as Key, dest: uci.slice(2, 4) as Key, brush: 'green' }]);
+  // flèche bleue : le dernier coup de l'adversaire (reste affichée avec les autres flèches)
+  let opp = p.lastMove;
+  const oppShape = (): DrawShape[] => (opp ? [{ orig: opp.slice(0, 2) as Key, dest: opp.slice(2, 4) as Key, brush: 'blue' }] : []);
+  const shapes = (extra: DrawShape[] = []) => board.setShapes([...oppShape(), ...extra]);
+  const arrow = (uci: string) => shapes([{ orig: uci.slice(0, 2) as Key, dest: uci.slice(2, 4) as Key, brush: 'green' }]);
+  if (p.lastMove) board.setPosition(p.fen, { from: p.lastMove.slice(0, 2), to: p.lastMove.slice(2, 4) });
+  shapes();
 
   /** Fin du puzzle : enregistre le résultat (SRS + stats) une seule fois. */
   async function finish(ok: boolean, html: string): Promise<void> {
@@ -154,8 +165,9 @@ function solve(root: HTMLElement, p: Puzzle, n: number, total: number, onResult:
     if (uci === expected || (await acceptable(board.game.fen()))) {
       step += 2;
       if (step >= p.solution.length || uci !== expected) {
-        // résolu (ou coup alternatif jugé aussi bon par le moteur)
-        return finish(!helped, `${uci === expected ? '✓ Bravo !' : '✓ Bon coup aussi (validé par le moteur).'}${helped ? ' (avec indice)' : ''}${why}`);
+        // résolu (ou coup alternatif jugé aussi bon par le moteur). Réussite "parfaite" = du premier coup, sans indice
+        const how = firstTry ? (helped ? ' (avec indice)' : '') : ' (après plusieurs essais : il reviendra bientôt)';
+        return finish(firstTry && !helped, `${uci === expected ? '✓ Bravo !' : '✓ Bon coup aussi (validé par le moteur).'}${how}${why}`);
       }
       // l'adversaire répond, puis on cherche le coup suivant
       board.setMovable('none');
@@ -163,11 +175,26 @@ function solve(root: HTMLElement, p: Puzzle, n: number, total: number, onResult:
       setTimeout(() => {
         const r = p.solution[step - 1];
         board.play({ from: r.slice(0, 2), to: r.slice(2, 4), promotion: r[4] });
+        opp = r; // la flèche bleue montre maintenant la réponse adverse
+        tries = 0;
+        board.setSquares({});
+        shapes();
         board.setMovable(p.color === 'w' ? 'white' : 'black');
+        msg("✓ Bien ! L'adversaire a répondu (flèche bleue). Trouve la suite.", 'ok');
       }, 500);
       return;
     }
+    // mauvais coup : on l'annule et on laisse réessayer
+    tries++;
+    firstTry = false;
     setTimeout(() => board.undo(), 300);
+    if (tries < MAX_TRIES) {
+      const left = MAX_TRIES - tries;
+      if (tries === MAX_TRIES - 1) board.setSquares({ [expected.slice(0, 2)]: 'hl-info' }); // dernier essai : indice
+      msg(`✗ Ce n'est pas ça. Réessaie ! (${left} essai${left > 1 ? 's' : ''} restant${left > 1 ? 's' : ''})${tries === MAX_TRIES - 1 ? '<br>💡 Indice : la pièce à jouer est surlignée.' : ''}`, 'bad');
+      shapes();
+      return;
+    }
     arrow(expected);
     finish(false, `✗ Raté. La solution était la flèche verte${step === 0 ? ` : <b>${p.bestSan}</b>` : ''}.${why}`);
   }

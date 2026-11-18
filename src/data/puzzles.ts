@@ -1,6 +1,7 @@
 // Puzzles créés à partir de mes erreurs (erreur, gaffe, coup manqué) dans les parties analysées.
 import { Chess } from 'chess.js';
 import { buildReview } from '../core/review';
+import { toFrench } from '../core/eval';
 import { db } from './db';
 import type { GameRec } from './types';
 
@@ -15,6 +16,8 @@ export interface Puzzle {
   bestSan: string; // la solution (français)
   explanation: string[]; // pourquoi mon coup était mauvais
   category: string;
+  lastMove?: string; // dernier coup adverse avant la position (UCI), montré par une flèche
+  lastSan?: string; // le même en notation française
   opponent: string;
   date: number;
   attempts: number;
@@ -34,6 +37,7 @@ export async function puzzlesFromGame(g: GameRec): Promise<number> {
     const first = new Chess(m.move.before).move({ from: pv[0].slice(0, 2), to: pv[0].slice(2, 4), promotion: pv[0][4] });
     const long = pv.length >= 3 && (first.san.includes('+') || first.captured) && m.themes.some((t) => t !== 'Positionnel');
     const id = `${g.id}:${m.ply}`;
+    const prev = review!.moves[m.ply - 1]?.move; // coup adverse qui a mené à la position
     if (await db.get('puzzles', id)) continue;
     const p: Puzzle = {
       id,
@@ -46,6 +50,8 @@ export async function puzzlesFromGame(g: GameRec): Promise<number> {
       bestSan: m.bestSan,
       explanation: m.explanation,
       category: m.category,
+      lastMove: prev ? prev.from + prev.to : undefined,
+      lastSan: prev ? toFrench(prev.san) : undefined,
       opponent: g.myColor === 'w' ? g.black : g.white,
       date: g.date,
       attempts: 0,
@@ -62,10 +68,27 @@ export async function puzzlesFromGame(g: GameRec): Promise<number> {
 /** Crée les puzzles de toutes les parties analysées qui n'en ont pas encore. */
 export async function generateAllPuzzles(): Promise<number> {
   // nettoyage : anciens puzzles créés à tort sur un coup qui donnait mat (bug corrigé en v0.1.8)
-  for (const p of await db.getAll<Puzzle>('puzzles')) if (p.played.includes('#')) await db.del('puzzles', p.id);
+  for (const p of await db.getAll<Puzzle>('puzzles')) {
+    if (p.played.includes('#')) await db.del('puzzles', p.id);
+    else if (p.lastMove === undefined) await addLastMove(p); // puzzles créés avant l'ajout de la flèche
+  }
   let n = 0;
   for (const g of await db.getAll<GameRec>('games')) if (g.evals && !g.puzzled) n += await puzzlesFromGame(g);
   return n;
+}
+
+/** Retrouve le dernier coup adverse d'un ancien puzzle à partir de sa partie. */
+async function addLastMove(p: Puzzle): Promise<void> {
+  const g = await db.get<GameRec>('games', p.gameId);
+  const ply = Number(p.id.slice(p.id.lastIndexOf(':') + 1));
+  if (!g || !ply) return;
+  const c = new Chess(g.startFen);
+  let last;
+  for (const san of g.moves.slice(0, ply)) last = c.move(san);
+  if (!last) return;
+  p.lastMove = last.from + last.to;
+  p.lastSan = toFrench(last.san);
+  await db.put('puzzles', p.id, p);
 }
 
 export interface ThemeStat {

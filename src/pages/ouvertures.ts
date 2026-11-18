@@ -176,10 +176,10 @@ function drawTraining(el: HTMLElement, op: OpeningFile): () => void {
         msg.innerHTML = html;
         msg.className = `rv-card trainer-msg ${kind}`;
       },
-      onDone: async (errors) => {
-        // ligne réussie avec au plus 1 erreur : elle entre dans les révisions
+      onDone: async (errors, revealed) => {
+        // ligne terminée sans avoir eu besoin de la solution : elle entre dans les révisions
         let extra = '';
-        if (errors <= 1) {
+        if (!revealed) {
           const card = await getCard(lineCardId(op.id, line.id), 'line');
           if (!card.last) {
             grade(card, true);
@@ -187,8 +187,8 @@ function drawTraining(el: HTMLElement, op: OpeningFile): () => void {
             extra = ' Elle est ajoutée à tes révisions.';
           }
         }
-        msg.innerHTML = `<b>Ligne terminée</b> avec ${errors} erreur(s).${extra}${errors > 1 ? ' Recommence pour la mémoriser.' : ''}`;
-        msg.className = `rv-card trainer-msg ${errors <= 1 ? 'ok' : 'bad'}`;
+        msg.innerHTML = `<b>Ligne terminée</b> avec ${errors} erreur(s).${extra}${revealed ? ' Recommence pour la mémoriser.' : ''}`;
+        msg.className = `rv-card trainer-msg ${revealed ? 'bad' : 'ok'}`;
       },
     });
   }
@@ -239,12 +239,14 @@ function drawReview(el: HTMLElement, ops: OpeningFile[], _all: OpeningFile[]): (
           msg.innerHTML = html;
           msg.className = `rv-card trainer-msg ${kind}`;
         },
-        onDone: async (errors) => {
-          const ok = errors === 0;
+        onDone: async (errors, revealed) => {
+          const ok = !revealed; // réussie si trouvée de mémoire, même après quelques essais
           done++;
           if (!ok) failed++;
           await saveCard(grade(item.card, ok));
-          msg.innerHTML = ok ? `<b>Parfait !</b> Prochaine révision ${dueLabel(item.card)}.` : `<b>${errors} erreur(s)</b> : la ligne reviendra bientôt.`;
+          msg.innerHTML = ok
+            ? `<b>${errors ? `Réussie (${errors} essai(s) raté(s))` : 'Parfait !'}</b> Prochaine révision ${dueLabel(item.card)}.`
+            : `<b>Solution montrée</b> : la ligne reviendra bientôt.`;
           msg.className = `rv-card trainer-msg ${ok ? 'ok' : 'bad'}`;
           btn.hidden = false;
         },
