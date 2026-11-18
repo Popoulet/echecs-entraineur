@@ -112,9 +112,17 @@ cg-board square.hl-info { background: rgba(80, 140, 230, 0.5); }
 [hidden] { display: none !important; }
 
 /* Barre de statut (synchro / analyse de fond) */
-.statusbar { position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 20;
-  background: var(--panel2); padding: 10px 16px; border-radius: 20px; font-size: 0.9rem; pointer-events: none; }
-@media (orientation: portrait) { .statusbar { bottom: calc(var(--nav) + 12px); } }
+/* paysage : dans la colonne de navigation ; portrait : fine bande au-dessus de la navigation */
+.nav .statusbar { margin-top: auto; padding: 6px 4px; font-size: 0.72rem; line-height: 1.25; text-align: center;
+  color: var(--accent); word-break: break-word; }
+.nav .statusbar + small { margin-top: 0; }
+@media (orientation: portrait) {
+  .nav .statusbar { position: fixed; left: 0; right: 0; bottom: calc(var(--nav) + env(safe-area-inset-bottom)); height: 26px;
+    margin: 0; padding: 4px 12px; font-size: 0.8rem; background: var(--panel2); z-index: 20; }
+  #app.has-status .main { padding-bottom: 26px; }
+  /* boutons de navigation ◀ ▶ en haut du panneau, toujours visibles sans défiler */
+  .side .btn-row.four { order: -1; }
+}
 
 .page-root { height: 100%; }
 

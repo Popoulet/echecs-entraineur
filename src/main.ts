@@ -25,10 +25,10 @@ const app = document.querySelector<HTMLDivElement>('#app')!;
 app.innerHTML = `
   <nav class="nav">
     ${ROUTES.map((r) => `<a href="#/${r.path}"><span>${r.icon}</span>${r.label}</a>`).join('')}
+    <div class="statusbar" hidden></div>
     <small class="muted">v${__APP_VERSION__}</small>
   </nav>
-  <main class="main"></main>
-  <div class="statusbar" hidden></div>`;
+  <main class="main"></main>`;
 const main = app.querySelector<HTMLElement>('.main')!;
 let cleanup: void | (() => void);
 
@@ -53,9 +53,10 @@ route();
 // Barre de statut en bas à droite : synchro et progression de l'analyse de fond
 const bar = app.querySelector<HTMLElement>('.statusbar')!;
 addEventListener('analysis-progress', () => {
-  const t = syncMessage || (progress.total ? `Analyse des parties : ${progress.done}/${progress.total}` : '');
+  const t = syncMessage || (progress.total ? `Analyse ${progress.done}/${progress.total}` : '');
   bar.textContent = t;
   bar.hidden = !t;
+  app.classList.toggle('has-status', !!t);
 });
 
 // À chaque ouverture : synchro + analyse (si au moins un compte existe)
