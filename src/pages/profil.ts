@@ -38,6 +38,10 @@ export function render(root: HTMLElement): () => void {
           <button class="chip" data-a="add">＋ Compte</button>
         </div>
 
+        ${accounts.filter((a) => a.lastError && (selected === 'all' || selected === a.id)).map((a) => `
+          <div class="card warn">⚠ Synchro ${SITE_FR[a.site]} impossible pour <b>${a.username}</b> (${a.lastError}).
+            ${a.site === 'lichess' ? 'Lichess refuse parfois temporairement les téléchargements : réessaie plus tard avec « Synchroniser ». ' : ''}
+            Tes parties déjà récupérées restent disponibles.</div>`).join('')}
         <div class="cards">
           <section class="card">
             <h3>Classement</h3>

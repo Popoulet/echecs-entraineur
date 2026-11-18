@@ -61,6 +61,8 @@ export async function puzzlesFromGame(g: GameRec): Promise<number> {
 
 /** Crée les puzzles de toutes les parties analysées qui n'en ont pas encore. */
 export async function generateAllPuzzles(): Promise<number> {
+  // nettoyage : anciens puzzles créés à tort sur un coup qui donnait mat (bug corrigé en v0.1.8)
+  for (const p of await db.getAll<Puzzle>('puzzles')) if (p.played.includes('#')) await db.del('puzzles', p.id);
   let n = 0;
   for (const g of await db.getAll<GameRec>('games')) if (g.evals && !g.puzzled) n += await puzzlesFromGame(g);
   return n;

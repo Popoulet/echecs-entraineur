@@ -12,6 +12,7 @@ export function winPercent(line: Pick<EngineLine, 'cp' | 'mate'>): number {
 /** Texte court de l'évaluation, ex. "+1.3" ou "M3" (point de vue des Blancs). */
 export function formatScore(line: Pick<EngineLine, 'cp' | 'mate'>): string {
   if (line.mate !== undefined) return `${line.mate > 0 ? '' : '-'}M${Math.abs(line.mate)}`;
+  if (line.cp !== undefined && Math.abs(line.cp) >= 10000) return 'Mat'; // position matée
   const v = (line.cp ?? 0) / 100;
   return (v > 0 ? '+' : '') + v.toFixed(1);
 }

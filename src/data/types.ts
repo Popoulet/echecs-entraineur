@@ -8,6 +8,7 @@ export interface Account {
   site: Site;
   username: string; // casse d'origine
   lastSync?: number; // ms : date de la dernière partie récupérée
+  lastError?: string; // message de la dernière synchro ratée (affiché dans le profil)
 }
 
 /** Évaluation d'une position par Stockfish (point de vue des Blancs). */

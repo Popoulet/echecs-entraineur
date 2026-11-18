@@ -193,3 +193,4 @@ a.chip { display: inline-flex; align-items: center; text-decoration: none; }
 .side .input { width: 100%; }
 .rep { margin: 8px 0 0; padding-top: 8px; border-top: 1px solid var(--panel2); } .rep a { color: var(--accent); }
 .btn:disabled { opacity: 0.4; }
+.card.warn { margin-bottom: 16px; border-left: 6px solid #e5a82a; }

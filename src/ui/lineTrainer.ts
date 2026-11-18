@@ -24,12 +24,13 @@ export function runTrainer(el: HTMLElement, o: TrainerOptions): () => void {
   let errors = 0;
   let missesHere = 0; // erreurs sur le coup courant
   let stopped = false;
+  let fenBefore = ''; // position avant le coup de l'utilisateur (le coup attendu se calcule depuis là)
   const board = new Board(el, { orientation: o.color === 'w' ? 'white' : 'black', movable: 'none', onMove: (m) => onUserMove(m.san) });
 
   /** Coup attendu au demi-coup courant (avec ses cases from/to). */
   const expected = () => {
     const san = o.line.moves[ply].san;
-    const m = new Chess(board.game.fen()).move(san);
+    const m = new Chess(fenBefore).move(san);
     return { san, m };
   };
 
@@ -52,6 +53,7 @@ export function runTrainer(el: HTMLElement, o: TrainerOptions): () => void {
       }, 550);
     } else {
       missesHere = 0;
+      fenBefore = board.game.fen();
       board.setShapes([]);
       board.setSquares({});
       board.setMovable(o.color === 'w' ? 'white' : 'black');

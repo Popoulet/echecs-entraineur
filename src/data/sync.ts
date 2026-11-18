@@ -32,6 +32,7 @@ export async function syncAccount(acc: Account): Promise<number> {
     added++;
   }
   if (games.length) acc.lastSync = Math.max(acc.lastSync ?? 0, ...games.map((g) => g.date));
+  acc.lastError = undefined;
   await db.put('accounts', acc.id, acc);
   if (added) notifyChange();
   return added;

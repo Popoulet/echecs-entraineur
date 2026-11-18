@@ -188,6 +188,11 @@ function show(root: HTMLElement, g: GameRec, review: Review, rep: RepInfo | null
 /** Message "sortie du répertoire" avec lien vers la leçon. */
 function repHtml(r: RepInfo): string {
   const exp = r.expected.map(toFrench).join(' ou ');
+  if (r.ply <= 1) {
+    // dès le 1er coup : la partie n'a rien à voir avec le répertoire, pas la peine de citer une leçon
+    return `<p class="rep">📖 ${r.byMe ? `Ouverture hors de ton répertoire (tes lignes commencent par <b>${exp}</b>).` : "L'adversaire a joué une ouverture hors de ton répertoire."}
+      <a href="#/ouvertures">Mon répertoire →</a></p>`;
+  }
   const who = r.byMe ? 'Tu es sorti' : "L'adversaire est sorti";
   return `<p class="rep">📖 <b>${who} du répertoire</b> (${r.openingName} – ${r.lineName}) : la leçon jouait <b>${exp}</b>.
     <a href="#/ouvertures/${r.openingId}/lecon">Revoir la leçon →</a></p>`;

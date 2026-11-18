@@ -54,7 +54,11 @@ const opp = (c: Color): Color => (c === 'w' ? 'b' : 'w');
 /** % de gain du point de vue de `c`. */
 const win = (e: PosEval, c: Color) => (c === 'w' ? winPercent(e) : 100 - winPercent(e));
 /** Mat en N pour `c` (positif) ou undefined. */
-const mateFor = (e: PosEval, c: Color) => (e.mate !== undefined && (c === 'w' ? e.mate > 0 : e.mate < 0) ? Math.abs(e.mate) : undefined);
+const mateFor = (e: PosEval, c: Color): number | undefined => {
+  // position déjà matée (stockée en cp ±10000 par l'analyse) : "mat en 0" pour le gagnant
+  if (e.cp !== undefined && Math.abs(e.cp) >= 10000) return (c === 'w') === e.cp > 0 ? 0 : undefined;
+  return e.mate !== undefined && (c === 'w' ? e.mate > 0 : e.mate < 0) ? Math.abs(e.mate) : undefined;
+};
 
 function uciToMove(fen: string, uci?: string): Move | undefined {
   if (!uci || uci.length < 4) return undefined;
