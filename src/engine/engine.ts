@@ -42,6 +42,8 @@ class Engine {
   private current?: Job;
   private paused = false;
   private searching = false; // une commande "go" est en cours
+  private lastOutput = 0; // dernière ligne de recherche (info/bestmove) reçue du moteur (ms)
+  private poke?: number; // relance de la file de commandes de Stockfish.js
 
   constructor() {
     // Pause/reprise : "pause"/"resume" sont émis par Capacitor, visibilitychange par le navigateur
@@ -50,6 +52,27 @@ class Engine {
     document.addEventListener('pause', pause);
     document.addEventListener('resume', resume);
     document.addEventListener('visibilitychange', () => (document.hidden ? pause() : resume()));
+    // chien de garde : une recherche sans aucune sortie pendant 8 s = moteur bloqué → redémarrage
+    window.setInterval(() => {
+      if (this.searching && Date.now() - this.lastOutput > 8000) this.restart();
+    }, 3000);
+  }
+
+  /** Redémarre le worker (bloqué ou tué par Android) et relance l'analyse en cours. */
+  private restart(): void {
+    console.warn('Moteur bloqué : redémarrage');
+    this.worker?.terminate();
+    this.worker = undefined;
+    this.ready = undefined;
+    this.searching = false;
+    clearInterval(this.poke);
+    const job = this.current;
+    this.current = undefined;
+    if (job) {
+      if (job.aborted) job.resolve(job.partial);
+      else this.queue.unshift({ ...job, partial: { fen: job.fen, depth: 0, lines: [] } });
+    }
+    this.pump();
   }
 
   /** Démarre le worker au premier besoin (chargement ~7 Mo). */
@@ -57,6 +80,10 @@ class Engine {
     if (this.ready) return this.ready;
     this.worker = new Worker(new URL(ENGINE_URL, document.baseURI));
     this.worker.onmessage = (e) => this.onLine(String(e.data));
+    this.worker.onerror = (e) => {
+      console.warn('Erreur du moteur', e.message);
+      this.restart();
+    };
     this.ready = new Promise((res) => {
       const wait = (e: MessageEvent) => {
         if (String(e.data) === 'readyok') {
@@ -82,6 +109,8 @@ class Engine {
     return new Promise((resolve) => {
       const job: Job = { fen, opts, resolve, partial: { fen, depth: 0, lines: [] } };
       if (opts.priority === 'live') {
+        // l'utilisateur interagit : l'appli est forcément visible (au cas où "resume" n'aurait pas été reçu)
+        if (!document.hidden) this.paused = false;
         // une nouvelle analyse "live" remplace la précédente
         this.queue = this.queue.filter((j) => {
           if (j.opts.priority !== 'live') return true;
@@ -121,7 +150,9 @@ class Engine {
     job.resolve(job.partial);
     this.current = undefined;
     this.searching = false;
-    this.pump();
+    clearInterval(this.poke);
+    // petit délai : laisse Stockfish.js finir sa recherche avant de recevoir la suivante
+    setTimeout(() => this.pump(), 20);
   }
 
   /** Interrompt le job courant et le remet en tête de file (il sera relancé de zéro). */
@@ -152,10 +183,23 @@ class Engine {
     this.send(`position fen ${job.fen}`);
     this.send(movetime ? `go movetime ${movetime}` : `go depth ${depth}`);
     this.searching = true;
+    this.lastOutput = Date.now();
+    // Stockfish.js garde "go" en file d'attente s'il se croit encore occupé, et ne vide cette file
+    // qu'à la fin d'une recherche : sur appareil lent, le "go" peut rester bloqué. Toute commande
+    // reçue relance la file, donc on envoie "isready" (sans effet) tant que la recherche n'a pas démarré.
+    let started = false;
+    const first = this.lastOutput;
+    clearInterval(this.poke);
+    this.poke = window.setInterval(() => {
+      if (this.current !== job || started) return clearInterval(this.poke);
+      if (this.lastOutput > first) started = true;
+      else this.send('isready');
+    }, 300);
   }
 
   /** Traite une ligne envoyée par Stockfish. */
   private onLine(line: string): void {
+    if (line.startsWith('info') || line.startsWith('bestmove')) this.lastOutput = Date.now(); // pas "readyok"
     const job = this.current;
     if (!job) return;
     if (line.startsWith('info') && line.includes(' pv ') && !line.includes('bound')) {
